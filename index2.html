@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta charset="utf-8">
+    <title>PULSO WebHid Demo</title>
+
+</head>
+
+<body>
+
+<script>
+const glCanvas = document.createElement("canvas");
+const gl = glCanvas.getContext("webgl");
+
+if ("xr" in window.navigator) {
+  /* WebXR can be used! */
+    console.log(" WebXR can be used!")
+} else {
+  /* WebXR isn't available */
+    console.log("WebXR isn't available")
+}
+
+//loadWebGLResources();
+
+glCanvas.addEventListener("webglcontextlost", (event) => {
+  // Indicates that the WebGL context can be restored.
+  event.canceled = true;
+});
+
+glCanvas.addEventListener("webglcontextrestored", (event) => {
+  // WebGL resources need to be re-created after a context loss.
+  loadWebGLResources();
+});
+
+async function onXRSessionStarted(xrSession) {
+  // Make sure the canvas context we want to use is compatible with the device.
+  // May trigger a context loss.
+  console.log('start')
+  await gl.makeXRCompatible();
+  xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, gl) });
+}
+</script>
+
+</body>
+
+</html>
